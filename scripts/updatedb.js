@@ -153,9 +153,14 @@ function extract(tmpFile, tmpFileName, cb) {
 
     pipeSteam.on('end', function() {
       console.log(' DONE'.green);
-
       cb();
     });
+    pipeSteam.on('close', function() {
+      console.log(' DONE?'.green);
+      cb();
+    });
+
+
   }
 }
 
@@ -165,7 +170,7 @@ function processCountryData(src, dest, cb) {
     var fields = CSVtoArray(line);
 
     if (fields.length < 6) {
-      console.log("weird line: %s::", line);
+      console.log('weird line: %s::', line);
       return;
     }
     lines++;
@@ -221,7 +226,7 @@ function processCountryData(src, dest, cb) {
 
   process.stdout.write('Processing Data (may take a moment) ...');
   var tstart = Date.now();
-  var datFile = fs.openSync(dataFile, "w");
+  var datFile = fs.openSync(dataFile, 'w');
 
   lazy(fs.createReadStream(tmpDataFile))
     .lines
@@ -242,8 +247,9 @@ mkdir(tmpPath);
 async.forEachSeries(databases, function(database, nextDatabase) {
   fetch(database.url, function(tmpFile, tmpFileName) {
     extract(tmpFile, tmpFileName, function() {
+      console.log('Extraced, process country data');
       processCountryData(database.src, database.dest, function() {
-        console.log();
+        console.log('next file...');
         nextDatabase();
       });
     });
@@ -256,7 +262,7 @@ async.forEachSeries(databases, function(database, nextDatabase) {
       process.exit();
     } else {
       console.log('Successfully Updated Databases from MaxMind.'.green);
-      if (process.argv[2] == 'debug') {
+      if (process.argv[2] === 'debug') {
         console.log('Notice: temporary files are not deleted for debug purposes.'.bold.yellow);
       } else {
         rimraf(tmpPath);
