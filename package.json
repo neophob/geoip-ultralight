@@ -1,6 +1,6 @@
 {
   "name": "geoip-ultralight",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Super lightweight GeoIP implementation with country data",
   "keywords": [
     "geo",
@@ -36,7 +36,6 @@
   "dependencies": {
     "async": "~1.5.2",
     "colors": "1.1.2",
-    "glob": "~7.0.3",
     "iconv-lite": "~0.4.13",
     "lazy": "~1.0.11",
     "rimraf": "~2.5.2",
